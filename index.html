@@ -32,47 +32,73 @@
         function preload()
         {
             this.game.load.atlasJSONArray('tile','assets/tiles.png','assets/tiles.json');
+            this.game.load.image('bg','assets/bg.png');
         }
 
         function create()
         {
+            game.add.sprite(0,0,'bg');
             build_board();
             set_bombs(99);
             set_bomb_counts();
+            shiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+
+
         }
 
         function update() 
         {
-            if(input_enabled){
-                for(var i=0; i<tiles.length; i++){
-                    //Clicking
-                    //Flagging?
-                    if(game.input.keyboard.isDown(Phaser.Keyboard.CONTROL) && tiles[i]["sprite"].input.pointerDown(game.input.activePointer.id)){
-                        tiles[i]["sprite"].frame = FLAGGED_STATE;
-                        tiles[i]["state"] = FLAGGED_STATE;
-                    } else if (tiles[i]["sprite"].input.pointerDown(game.input.activePointer.id)) {
+            if(game_won()){
+                //filler
+            } else {
+                if(input_enabled){
+                    for(var i=0; i<tiles.length; i++){
+                        //Clicking
+                        //Flagging?
+                        if (tiles[i]["sprite"].input.pointerDown(game.input.activePointer.id)) {
+                            if (shiftKey.isDown){
+                                tiles[i]["sprite"].frame = FLAGGED_STATE;
+                                tiles[i]["state"] = FLAGGED_STATE;
+                            } else {
+                                // Tile was clicked
+                                // Is the tile a bomb?
+                                if(tiles[i].bomb == true){
+                                    reveal_all_bombs();
+                                    tiles[i]["sprite"].frame = EXPLODED_BOMB_STATE;
+                                    tiles[i]["state"] = EXPLODED_BOMB_STATE;
+                                    input_enabled = false;
+                                } else {
+                                    // Does the tile have a bomb count?
+                                    tiles[i]["sprite"].frame = REVEALED_STATE;
+                                    tiles[i]["state"] = REVEALED_STATE;
 
-                        // Tile was clicked
-                        // Is the tile a bomb?
-                        if(tiles[i].bomb == true){
-                            reveal_all_bombs();
-                            tiles[i]["sprite"].frame = EXPLODED_BOMB_STATE;
-                            tiles[i]["state"] = EXPLODED_BOMB_STATE;
-                            input_enabled = false;
-                        } else {
-                            // Does the tile have a bomb count?
-                            tiles[i]["sprite"].frame = REVEALED_STATE;
-                            tiles[i]["state"] = REVEALED_STATE;
-
-                            if(tiles[i]["bomb_count"] > 0){
-                                tiles[i]["text"].alpha = 1.0;
-                            } else if(tiles[i]["bomb_count"] == 0){
-                                reveal_all_empty_neighbors_starting_from(i);
+                                    if(tiles[i]["bomb_count"] > 0){
+                                        tiles[i]["text"].alpha = 1.0;
+                                    } else if(tiles[i]["bomb_count"] == 0){
+                                        tiles[i]["text"].alpha = 0.0;
+                                        reveal_all_empty_neighbors_starting_from(i);
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+        }
+
+        function game_won()
+        {
+            var revealed_tiles = 0;
+            for(var i=0; i<tiles.length; i++){
+                if(tiles[i]["state"] == REVEALED_STATE){
+                    revealed_tiles = revealed_tiles + 1;
+                }
+            }
+
+            reveal_tiles_label.setText(revealed_tiles);
+            total_tiles_label.setText(tiles_width * tiles_height - revealed_tiles - bomb_count);
+
+            return ((tiles_width * tiles_height) - bomb_count) == revealed_tiles
         }
 
         function reveal_all_empty_neighbors_starting_from(starting_index)
@@ -85,6 +111,7 @@
 
                 if(tile["bomb_count"] == 0 && tile["bomb"] == false){
                     var new_neighbors = get_neighbors_for(tile["index"]);
+                    tile["text"].alpha = 0.0;
                     for(var j=0; j<new_neighbors.length; j++){
                         neighbors.push(new_neighbors[j]);
                     }
@@ -92,6 +119,9 @@
 
                 tile["sprite"].frame = REVEALED_STATE;
                 tile["state"] = REVEALED_STATE;
+                if(tile["bomb_count"] != 0){
+                    tile["text"].alpha = 1.0;
+                }
             }
         }
 
@@ -121,6 +151,8 @@
         function build_board()
         {
             var style = { font: "18px Arial", fill: "#ffffff", align: "center" };
+            reveal_tiles_label = game.add.text(400, 50, "0", style);
+            total_tiles_label = game.add.text(350,50,":)",style);
             var index_count = 0;
             for(var j = 100; j < (tiles_height*25)+100; j += 25) {
                 for (var i=25; i<(tiles_width*25)+25; i+=25) {
@@ -197,7 +229,7 @@
                 tiles[i]["bomb_count"] = bomb_count;
                 tiles[i]["text"].setText(""+bomb_count);
                 //tiles[i]["text"].setText(tiles[i]["index"]);
-                tiles[i]["text"].alpha = 1.0;
+                //tiles[i]["text"].alpha = 1.0;
             }
         }
 
