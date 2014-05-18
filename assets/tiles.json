@@ -1,0 +1,76 @@
+{"frames": [
+
+{
+	"filename": "dirt.png",
+	"frame": {"x":207,"y":2,"w":27,"h":27},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":27,"h":27},
+	"sourceSize": {"w":27,"h":27}
+},
+{
+	"filename": "exploded_mine.png",
+	"frame": {"x":32,"y":2,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":28,"h":28},
+	"sourceSize": {"w":28,"h":28}
+},
+{
+	"filename": "flag.png",
+	"frame": {"x":178,"y":2,"w":27,"h":27},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":27,"h":27},
+	"sourceSize": {"w":27,"h":27}
+},
+{
+	"filename": "grass1.png",
+	"frame": {"x":149,"y":2,"w":27,"h":27},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":27,"h":27},
+	"sourceSize": {"w":27,"h":27}
+},
+{
+	"filename": "grass2.png",
+	"frame": {"x":120,"y":2,"w":27,"h":27},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":27,"h":27},
+	"sourceSize": {"w":27,"h":27}
+},
+{
+	"filename": "grass3.png",
+	"frame": {"x":91,"y":2,"w":27,"h":27},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":27,"h":27},
+	"sourceSize": {"w":27,"h":27}
+},
+{
+	"filename": "grass4.png",
+	"frame": {"x":62,"y":2,"w":27,"h":27},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":27,"h":27},
+	"sourceSize": {"w":27,"h":27}
+},
+{
+	"filename": "mine.png",
+	"frame": {"x":2,"y":2,"w":28,"h":28},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":28,"h":28},
+	"sourceSize": {"w":28,"h":28}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "tiles.png",
+	"format": "RGBA8888",
+	"size": {"w":236,"h":32},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:c3f5cbddc8b8badf199e22860100364d:50d7357b77386e0f3a8f1f0f1712d0eb:accbe1e7e294ded8391337fc1c446319$"
+}
+}
