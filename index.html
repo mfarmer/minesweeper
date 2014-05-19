@@ -49,54 +49,7 @@
 
         function update() 
         {
-            if(game_won()){
 
-            } else {
-                if(input_enabled){
-                    for(var i=0; i<tiles.length; i++){
-                        //Clicking
-                        //Flagging?
-                        if (tiles[i]["sprite"].input.pointerDown(game.input.activePointer.id)) {
-                            if (shiftKey.isDown){
-                                if(tiles[i]["flagged"] == false){
-                                    tiles[i]["sprite"].frame = FLAGGED_STATE;
-                                    tiles[i]["state"] = FLAGGED_STATE;
-                                    tiles[i]["flagged"] = true;
-                                } else {
-                                    tiles[i]["sprite"].frame = HIDDEN_STATE;
-                                    tiles[i]["state"] = HIDDEN_STATE;
-                                    tiles[i]["flagged"] = false;
-                                }
-                            } else {
-                                // Tile was clicked
-                                // Is the tile a bomb?
-                                if(tiles[i]["flagged"] == false) {
-
-                                    // Does the tile have a bomb count?
-                                    if(tiles[i]["bomb"] == true){
-                                        reveal_all_bombs();
-                                        tiles[i]["sprite"].frame = EXPLODED_BOMB_STATE;
-                                        tiles[i]["state"] = EXPLODED_BOMB_STATE;
-                                        input_enabled = false;
-                                    } else {
-                                        tiles[i]["sprite"].frame = REVEALED_STATE;
-                                        tiles[i]["state"] = REVEALED_STATE;
-
-                                        if(tiles[i]["bomb_count"] > 0){
-                                            tiles[i]["text"].alpha = 1.0;
-                                        } else if(tiles[i]["bomb_count"] == 0){
-                                            tiles[i]["text"].alpha = 0.0;
-                                            reveal_all_empty_neighbors_starting_from(i);
-                                        }
-                                    }
-                                } else {
-                                    alert('hi!');
-                                }
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         function game_won()
@@ -116,6 +69,9 @@
 
         function reveal_all_empty_neighbors_starting_from(starting_index)
         {
+            tiles[starting_index]["sprite"].frame = REVEALED_STATE;
+            tiles[starting_index]["state"] = REVEALED_STATE;
+
             var neighbors = get_neighbors_for(starting_index);
 
             while(neighbors.length > 0){
@@ -169,7 +125,7 @@
             var index_count = 0;
             for(var j = 100; j < (tiles_height*25)+100; j += 25) {
                 for (var i=25; i<(tiles_width*25)+25; i+=25) {
-                    x = {
+                    var x = {
                         "sprite": game.add.sprite(i,j,'tile'),
                         "text": game.add.text(i+7, j+2, "0", style),
                         "state": HIDDEN_STATE,
@@ -179,11 +135,27 @@
                         "checked": false,
                         "flagged": false
                     };
+                    x["sprite"].inputEnabled = true;
+                    x["sprite"].events.onInputDown.add(process_input,x);
+
                     x["text"].alpha = 0.0;
-                    x["sprite"].input.start();
                     tiles.push(x);
                     x["sprite"].loadTexture('tile',HIDDEN_STATE[Math.floor((Math.random() * 4) + 0)]);
                     index_count = index_count + 1;
+                }
+            }
+        }
+
+        function process_input()
+        {
+            //'this' refers to the tile which was clicked
+            if(this["state"] == HIDDEN_STATE){
+                if(this["bomb"] == false){
+                    reveal_all_empty_neighbors_starting_from(this["index"]);
+                } else {
+                    reveal_all_bombs();
+                    this["sprite"].frame = EXPLODED_BOMB_STATE;
+                    this["state"] = EXPLODED_BOMB_STATE;
                 }
             }
         }
